@@ -54,7 +54,7 @@ spec:
         enable_debug: false
         edpm_network_config_os_net_config_mappings: {}
         # CentOS Cloud SIG os-net-config doesn't have nmstate provider
-        edpm_os_net_config_provider: ifcfg
+        edpm_network_config_nmstate: false
         neutron_physical_bridge_name: br-ex
         neutron_public_interface_name: eth0
         ctlplane_dns_nameservers:
