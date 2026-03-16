@@ -43,7 +43,7 @@ metadata:
   namespace: metallb-system
 spec:
   ipAddressPools: [ctlplane]
-  interfaces: [enp2s0]
+  interfaces: [ospbr]
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
@@ -52,7 +52,7 @@ metadata:
   namespace: metallb-system
 spec:
   ipAddressPools: [internalapi]
-  interfaces: [enp2s0.20]
+  interfaces: [enp6s0.20]
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
@@ -61,7 +61,7 @@ metadata:
   namespace: metallb-system
 spec:
   ipAddressPools: [storage]
-  interfaces: [enp2s0.21]
+  interfaces: [enp6s0.21]
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
@@ -70,4 +70,4 @@ metadata:
   namespace: metallb-system
 spec:
   ipAddressPools: [tenant]
-  interfaces: [enp2s0.22]
+  interfaces: [enp6s0.22]
