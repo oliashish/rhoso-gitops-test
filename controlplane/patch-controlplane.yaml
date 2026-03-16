@@ -1,0 +1,90 @@
+# Patch upstream OpenStackControlPlane for CRC (single node, minimal resources)
+---
+apiVersion: core.openstack.org/v1beta1
+kind: OpenStackControlPlane
+metadata:
+  name: openstack-control-plane
+  namespace: openstack
+spec:
+  # CRC storage class
+  storageClass: crc-csi-hostpath-provisioner
+
+  # CRC DNS server
+  dns:
+    template:
+      replicas: 1
+      options:
+        - key: server
+          values: [192.168.122.1]
+
+  # Reduce replicas for single-node CRC
+  galera:
+    templates:
+      openstack:
+        replicas: 1
+        storageRequest: 500M
+      openstack-cell1:
+        replicas: 1
+        storageRequest: 500M
+
+  keystone:
+    template:
+      replicas: 1
+
+  glance:
+    template:
+      glanceAPIs:
+        default:
+          replicas: 1
+
+  cinder:
+    template:
+      cinderAPI:
+        replicas: 1
+      cinderScheduler:
+        replicas: 1
+
+  neutron:
+    template:
+      replicas: 1
+
+  nova:
+    template:
+      apiServiceTemplate:
+        replicas: 1
+      metadataServiceTemplate:
+        replicas: 1
+      schedulerServiceTemplate:
+        replicas: 1
+
+  placement:
+    template:
+      replicas: 1
+
+  ovn:
+    template:
+      ovnDBCluster:
+        ovndbcluster-nb:
+          replicas: 1
+        ovndbcluster-sb:
+          replicas: 1
+
+  rabbitmq:
+    templates:
+      rabbitmq:
+        replicas: 1
+      rabbitmq-cell1:
+        replicas: 1
+
+  memcached:
+    templates:
+      memcached:
+        replicas: 1
+
+  # Disable optional services for CRC
+  barbican:
+    enabled: false
+  swift:
+    enabled: false
+  telemetry:
+    enabled: false

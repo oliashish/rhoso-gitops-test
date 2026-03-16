@@ -1,0 +1,45 @@
+# CRC NetConfig
+---
+apiVersion: network.openstack.org/v1beta1
+kind: NetConfig
+metadata:
+  name: openstacknetconfig
+  namespace: openstack
+spec:
+  networks:
+    - name: ctlplane
+      dnsDomain: ctlplane.example.com
+      subnets:
+        - name: subnet1
+          allocationRanges:
+            - start: 192.168.122.100
+              end: 192.168.122.120
+          cidr: 192.168.122.0/24
+          gateway: 192.168.122.1
+    - name: internalapi
+      dnsDomain: internalapi.example.com
+      subnets:
+        - name: subnet1
+          allocationRanges:
+            - start: 172.17.0.100
+              end: 172.17.0.250
+          cidr: 172.17.0.0/24
+          vlan: 20
+    - name: storage
+      dnsDomain: storage.example.com
+      subnets:
+        - name: subnet1
+          allocationRanges:
+            - start: 172.18.0.100
+              end: 172.18.0.250
+          cidr: 172.18.0.0/24
+          vlan: 21
+    - name: tenant
+      dnsDomain: tenant.example.com
+      subnets:
+        - name: subnet1
+          allocationRanges:
+            - start: 172.19.0.100
+              end: 172.19.0.250
+          cidr: 172.19.0.0/24
+          vlan: 22

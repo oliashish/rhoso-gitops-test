@@ -1,0 +1,25 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openstack-dataplane
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  project: default
+  source:
+    # YOUR repo - change this!
+    repoURL: https://github.com/oliashish/rhoso-gitops-test.git
+    targetRevision: main
+    path: dataplane
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openstack
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

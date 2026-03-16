@@ -1,0 +1,10 @@
+# Patch upstream Deployment for CRC
+---
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneDeployment
+metadata:
+  name: edpm-deployment-crc
+  namespace: openstack
+spec:
+  nodeSets:
+    - openstack-edpm-crc

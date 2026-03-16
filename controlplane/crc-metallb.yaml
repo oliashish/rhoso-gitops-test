@@ -1,0 +1,73 @@
+# CRC MetalLB IPAddressPools and L2Advertisement
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ctlplane
+  namespace: metallb-system
+spec:
+  addresses:
+    - 192.168.122.80-192.168.122.90
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: internalapi
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.17.0.80-172.17.0.90
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: storage
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.18.0.80-172.18.0.90
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: tenant
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.19.0.80-172.19.0.90
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: ctlplane
+  namespace: metallb-system
+spec:
+  ipAddressPools: [ctlplane]
+  interfaces: [enp2s0]
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: internalapi
+  namespace: metallb-system
+spec:
+  ipAddressPools: [internalapi]
+  interfaces: [enp2s0.20]
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: storage
+  namespace: metallb-system
+spec:
+  ipAddressPools: [storage]
+  interfaces: [enp2s0.21]
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: tenant
+  namespace: metallb-system
+spec:
+  ipAddressPools: [tenant]
+  interfaces: [enp2s0.22]

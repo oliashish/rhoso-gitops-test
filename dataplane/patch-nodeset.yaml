@@ -1,0 +1,51 @@
+# Patch upstream NodeSet for CRC EDPM nodes
+---
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneNodeSet
+metadata:
+  name: openstack-edpm-crc
+  namespace: openstack
+spec:
+  nodeTemplate:
+    ansible:
+      # CRC EDPM VMs use root user (CentOS Stream)
+      ansibleUser: root
+      ansibleVars:
+        # No subscription manager for CentOS Stream
+        edpm_bootstrap_command: |
+          dnf install -y python3
+        ctlplane_dns_nameservers:
+          - 192.168.122.80
+
+  # CRC EDPM nodes
+  nodes:
+    edpm-compute-0:
+      hostName: edpm-compute-0
+      ansible:
+        ansibleHost: 192.168.122.100
+      networks:
+        - name: ctlplane
+          subnetName: subnet1
+          defaultRoute: true
+          fixedIP: 192.168.122.100
+        - name: internalapi
+          subnetName: subnet1
+        - name: storage
+          subnetName: subnet1
+        - name: tenant
+          subnetName: subnet1
+    edpm-compute-1:
+      hostName: edpm-compute-1
+      ansible:
+        ansibleHost: 192.168.122.101
+      networks:
+        - name: ctlplane
+          subnetName: subnet1
+          defaultRoute: true
+          fixedIP: 192.168.122.101
+        - name: internalapi
+          subnetName: subnet1
+        - name: storage
+          subnetName: subnet1
+        - name: tenant
+          subnetName: subnet1

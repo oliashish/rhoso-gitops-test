@@ -1,0 +1,69 @@
+# CRC single-node NNCP (replaces upstream 3-node config)
+---
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: osp-enp2s0-crc
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: crc
+  desiredState:
+    interfaces:
+      - name: enp2s0
+        description: ctlplane interface
+        type: ethernet
+        state: up
+        mtu: 1500
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 192.168.122.10
+              prefix-length: 24
+        ipv6:
+          enabled: false
+      - name: enp2s0.20
+        description: internalapi vlan
+        type: vlan
+        state: up
+        vlan:
+          base-iface: enp2s0
+          id: 20
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 172.17.0.10
+              prefix-length: 24
+        ipv6:
+          enabled: false
+      - name: enp2s0.21
+        description: storage vlan
+        type: vlan
+        state: up
+        vlan:
+          base-iface: enp2s0
+          id: 21
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 172.18.0.10
+              prefix-length: 24
+        ipv6:
+          enabled: false
+      - name: enp2s0.22
+        description: tenant vlan
+        type: vlan
+        state: up
+        vlan:
+          base-iface: enp2s0
+          id: 22
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 172.19.0.10
+              prefix-length: 24
+        ipv6:
+          enabled: false
