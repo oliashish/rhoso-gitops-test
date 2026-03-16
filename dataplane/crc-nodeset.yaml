@@ -13,6 +13,22 @@ spec:
   networkAttachments:
     - ctlplane
   preProvisioned: true
+  tlsEnabled: false
+  # Services for CentOS Stream (no 'redhat' service - that's for RHEL subscription)
+  services:
+    - bootstrap
+    - download-cache
+    - configure-network
+    - validate-network
+    - install-os
+    - configure-os
+    - ssh-known-hosts
+    - run-os
+    - install-certs
+    - ovn
+    - neutron-metadata
+    - libvirt
+    - nova
   nodeTemplate:
     ansibleSSHPrivateKeySecret: dataplane-ansible-ssh-private-key-secret
     managementNetwork: ctlplane
@@ -22,8 +38,13 @@ spec:
       ansibleVars:
         # CentOS Stream - no subscription manager needed
         edpm_bootstrap_command: |
-          dnf install -y python3
+          dnf install -y python3 podman
         edpm_bootstrap_release_version_package: []
+        # Skip validations that may fail in dev environment
+        edpm_nodes_validation_validate_controllers_icmp: false
+        edpm_nodes_validation_validate_gateway_icmp: false
+        gather_facts: false
+        enable_debug: false
         edpm_network_config_os_net_config_mappings: {}
         neutron_physical_bridge_name: br-ex
         neutron_public_interface_name: eth0
