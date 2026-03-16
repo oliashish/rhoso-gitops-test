@@ -1,4 +1,5 @@
-# Patch upstream Deployment for CRC
+# CRC EDPM Deployment
+# Triggers Ansible deployment to EDPM compute nodes
 ---
 apiVersion: dataplane.openstack.org/v1beta1
 kind: OpenStackDataPlaneDeployment

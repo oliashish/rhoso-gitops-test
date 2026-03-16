@@ -1,0 +1,90 @@
+# CRC EDPM NodeSet
+# Uses CentOS Stream VMs created by install_yamls
+---
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneNodeSet
+metadata:
+  name: openstack-edpm-crc
+  namespace: openstack
+spec:
+  env:
+    - name: ANSIBLE_FORCE_COLOR
+      value: "True"
+  networkAttachments:
+    - ctlplane
+  preProvisioned: true
+  nodeTemplate:
+    ansibleSSHPrivateKeySecret: dataplane-ansible-ssh-private-key-secret
+    managementNetwork: ctlplane
+    ansible:
+      ansibleUser: root
+      ansiblePort: 22
+      ansibleVars:
+        # CentOS Stream - no subscription manager needed
+        edpm_bootstrap_command: |
+          dnf install -y python3
+        edpm_bootstrap_release_version_package: []
+        edpm_network_config_os_net_config_mappings: {}
+        neutron_physical_bridge_name: br-ex
+        neutron_public_interface_name: eth0
+        ctlplane_dns_nameservers:
+          - 192.168.122.80
+        edpm_network_config_template: |
+          ---
+          network_config:
+          - type: ovs_bridge
+            name: {{ neutron_physical_bridge_name }}
+            use_dhcp: false
+            dns_servers: {{ ctlplane_dns_nameservers }}
+            addresses:
+            - ip_netmask: {{ ctlplane_ip }}/{{ ctlplane_cidr }}
+            routes: {{ ctlplane_host_routes }}
+            members:
+            - type: interface
+              name: nic1
+              primary: true
+          {% for network in nodeset_networks if network != 'ctlplane' %}
+          - type: vlan
+            device: {{ neutron_physical_bridge_name }}
+            vlan_id: {{ lookup('vars', networks_lower[network] ~ '_vlan_id') }}
+            addresses:
+            - ip_netmask: {{ lookup('vars', networks_lower[network] ~ '_ip') }}/{{ lookup('vars', networks_lower[network] ~ '_cidr') }}
+            routes: {{ lookup('vars', networks_lower[network] ~ '_host_routes') }}
+          {% endfor %}
+  nodes:
+    edpm-compute-0:
+      hostName: edpm-compute-0
+      ansible:
+        ansibleHost: 192.168.122.100
+      networks:
+        - name: ctlplane
+          subnetName: subnet1
+          defaultRoute: true
+          fixedIP: 192.168.122.100
+        - name: internalapi
+          subnetName: subnet1
+          fixedIP: 172.17.0.100
+        - name: storage
+          subnetName: subnet1
+          fixedIP: 172.18.0.100
+        - name: tenant
+          subnetName: subnet1
+          fixedIP: 172.19.0.100
+    edpm-compute-1:
+      hostName: edpm-compute-1
+      ansible:
+        ansibleHost: 192.168.122.101
+      networks:
+        - name: ctlplane
+          subnetName: subnet1
+          defaultRoute: true
+          fixedIP: 192.168.122.101
+        - name: internalapi
+          subnetName: subnet1
+          fixedIP: 172.17.0.101
+        - name: storage
+          subnetName: subnet1
+          fixedIP: 172.18.0.101
+        - name: tenant
+          subnetName: subnet1
+          fixedIP: 172.19.0.101

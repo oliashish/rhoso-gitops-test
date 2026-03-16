@@ -2,12 +2,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Reference upstream dataplane components
+# Add ArgoCD sync-wave annotations
 components:
   - https://github.com/openstack-k8s-operators/gitops/components/argocd/annotations?ref=main
-  - https://github.com/openstack-k8s-operators/gitops/components/rhoso/dataplane?ref=main
 
-# Patch for CRC-specific node configuration
-patches:
-  - path: patch-nodeset.yaml
-  - path: patch-deployment.yaml
+# CRC-specific dataplane resources (not using upstream component)
+resources:
+  - crc-nodeset.yaml
+  - crc-deployment.yaml
