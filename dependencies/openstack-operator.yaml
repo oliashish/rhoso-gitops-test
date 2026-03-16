@@ -1,9 +1,19 @@
-# OpenStack Operator Subscription
+# OpenStack Operator CatalogSource and Subscription
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: openstack-operators
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: openstack-operator-index
+  namespace: openstack-operators
+spec:
+  sourceType: grpc
+  # RHOSO 18.0 operator index (internal Red Hat build)
+  image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1109519
 ---
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
@@ -21,5 +31,5 @@ metadata:
 spec:
   name: openstack-operator
   channel: stable-v1.0
-  source: redhat-operators
-  sourceNamespace: openshift-marketplace
+  source: openstack-operator-index
+  sourceNamespace: openstack-operators
