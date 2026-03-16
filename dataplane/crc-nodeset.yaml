@@ -14,10 +14,9 @@ spec:
     - ctlplane
   preProvisioned: true
   tlsEnabled: true
-  # Services for CentOS Stream (no 'redhat' service - that's for RHEL subscription)
+  # Services for CentOS Stream (no 'redhat' or 'download-cache' - those need RHEL repos)
   services:
     - bootstrap
-    - download-cache
     - configure-network
     - validate-network
     - install-os
@@ -38,7 +37,15 @@ spec:
       ansibleVars:
         # CentOS Stream - no subscription manager needed
         edpm_bootstrap_command: |
-          dnf install -y python3 podman lvm2 ksmtuned
+          # Add CentOS Cloud SIG OpenStack Bobcat repo
+          dnf install -y centos-release-openstack-bobcat || true
+          # Install required packages
+          dnf install -y python3 python3-pip podman lvm2 ksmtuned driverctl jq \
+            nftables tmpwatch sysstat iproute-tc systemd-container \
+            crypto-policies-scripts grubby sos libvirt qemu-kvm \
+            openstack-selinux openvswitch3.3 os-net-config
+          # crudini not in repos, install via pip
+          pip3 install crudini
         edpm_bootstrap_release_version_package: []
         # Skip validations that may fail in dev environment
         edpm_nodes_validation_validate_controllers_icmp: false
