@@ -38,7 +38,7 @@ spec:
       ansibleVars:
         # CentOS Stream - no subscription manager needed
         edpm_bootstrap_command: |
-          dnf install -y python3 podman
+          dnf install -y python3 podman lvm2
         edpm_bootstrap_release_version_package: []
         # Skip validations that may fail in dev environment
         edpm_nodes_validation_validate_controllers_icmp: false
