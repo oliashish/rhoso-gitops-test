@@ -13,7 +13,7 @@ spec:
   networkAttachments:
     - ctlplane
   preProvisioned: true
-  tlsEnabled: false
+  tlsEnabled: true
   # Services for CentOS Stream (no 'redhat' service - that's for RHEL subscription)
   services:
     - bootstrap
