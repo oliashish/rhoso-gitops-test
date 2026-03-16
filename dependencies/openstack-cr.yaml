@@ -1,0 +1,9 @@
+# OpenStack CR - triggers deployment of sub-operators
+# This creates the CRDs for OpenStackControlPlane, etc.
+---
+apiVersion: operator.openstack.org/v1beta1
+kind: OpenStack
+metadata:
+  name: openstack
+  namespace: openstack-operators
+spec: {}

@@ -10,3 +10,4 @@ components:
 # OpenStack operator (not included in olm-deps)
 resources:
   - openstack-operator.yaml
+  - openstack-cr.yaml
