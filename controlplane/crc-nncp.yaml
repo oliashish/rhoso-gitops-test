@@ -1,34 +1,27 @@
-# CRC single-node NNCP (replaces upstream 3-node config)
+# CRC single-node NNCP using enp6s0 (secondary NIC, not OVS-managed)
+# Based on install_yamls generated configuration
 ---
 apiVersion: nmstate.io/v1
 kind: NodeNetworkConfigurationPolicy
 metadata:
-  name: osp-enp2s0-crc
+  name: osp-enp6s0-crc
+  labels:
+    osp/interface: enp6s0
 spec:
   nodeSelector:
     kubernetes.io/hostname: crc
+    node-role.kubernetes.io/worker: ""
   desiredState:
     interfaces:
-      - name: enp2s0
-        description: ctlplane interface
-        type: ethernet
-        state: up
-        mtu: 1500
-        ipv4:
-          enabled: true
-          dhcp: false
-          address:
-            - ip: 192.168.122.10
-              prefix-length: 24
-        ipv6:
-          enabled: false
-      - name: enp2s0.20
-        description: internalapi vlan
+      # internalapi VLAN
+      - name: enp6s0.20
+        description: internalapi vlan interface
         type: vlan
         state: up
         vlan:
-          base-iface: enp2s0
+          base-iface: enp6s0
           id: 20
+          reorder-headers: true
         ipv4:
           enabled: true
           dhcp: false
@@ -37,13 +30,15 @@ spec:
               prefix-length: 24
         ipv6:
           enabled: false
-      - name: enp2s0.21
-        description: storage vlan
+      # storage VLAN
+      - name: enp6s0.21
+        description: storage vlan interface
         type: vlan
         state: up
         vlan:
-          base-iface: enp2s0
+          base-iface: enp6s0
           id: 21
+          reorder-headers: true
         ipv4:
           enabled: true
           dhcp: false
@@ -52,18 +47,41 @@ spec:
               prefix-length: 24
         ipv6:
           enabled: false
-      - name: enp2s0.22
-        description: tenant vlan
+      # tenant VLAN
+      - name: enp6s0.22
+        description: tenant vlan interface
         type: vlan
         state: up
         vlan:
-          base-iface: enp2s0
+          base-iface: enp6s0
           id: 22
+          reorder-headers: true
         ipv4:
           enabled: true
           dhcp: false
           address:
             - ip: 172.19.0.10
+              prefix-length: 24
+        ipv6:
+          enabled: false
+      # ctlplane Linux bridge (untagged traffic on enp6s0)
+      - name: ospbr
+        description: Configuring Bridge ospbr with interface enp6s0
+        type: linux-bridge
+        state: up
+        mtu: 1500
+        bridge:
+          options:
+            stp:
+              enabled: false
+          port:
+            - name: enp6s0
+              vlan: {}
+        ipv4:
+          enabled: true
+          dhcp: false
+          address:
+            - ip: 192.168.122.10
               prefix-length: 24
         ipv6:
           enabled: false
