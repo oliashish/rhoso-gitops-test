@@ -12,8 +12,8 @@ metadata:
   namespace: openstack-operators
 spec:
   sourceType: grpc
-  # RHOSO 18.0 operator index (internal Red Hat build)
-  image: registry-proxy.engineering.redhat.com/rh-osbs/iib:1109519
+  # Upstream OpenStack operator index (public)
+  image: quay.io/openstack-k8s-operators/openstack-operator-index:latest
 ---
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
@@ -30,6 +30,6 @@ metadata:
   namespace: openstack-operators
 spec:
   name: openstack-operator
-  channel: stable-v1.0
+  channel: alpha
   source: openstack-operator-index
   sourceNamespace: openstack-operators
