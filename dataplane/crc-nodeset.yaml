@@ -58,7 +58,8 @@ spec:
         neutron_physical_bridge_name: br-ex
         neutron_public_interface_name: eth0
         ctlplane_dns_nameservers:
-          - 192.168.122.80
+          - 192.168.122.1
+          - 8.8.8.8
         edpm_network_config_template: |
           ---
           network_config:
