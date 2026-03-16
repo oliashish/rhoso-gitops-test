@@ -1,0 +1,7 @@
+# NMState CR - initializes NNCP and other CRDs
+---
+apiVersion: nmstate.io/v1
+kind: NMState
+metadata:
+  name: nmstate
+spec: {}

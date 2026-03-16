@@ -7,7 +7,9 @@ components:
   - https://github.com/openstack-k8s-operators/architecture/lib/olm-deps?ref=main
   - https://github.com/openstack-k8s-operators/gitops/components/argocd/annotations?ref=main
 
-# OpenStack operator (not included in olm-deps)
+# Additional CRs to initialize operators (not in upstream olm-deps)
 resources:
+  - nmstate-cr.yaml
+  - metallb-cr.yaml
   - openstack-operator.yaml
   - openstack-cr.yaml
