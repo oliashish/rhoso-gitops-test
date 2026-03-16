@@ -39,6 +39,8 @@ spec:
         edpm_bootstrap_command: |
           # Add CentOS Cloud SIG OpenStack Bobcat repo
           dnf install -y centos-release-openstack-bobcat || true
+          # Disable ceph-reef repo (broken dependencies)
+          dnf config-manager --disable centos-ceph-reef || true
           # Install required packages
           dnf install -y python3 python3-pip podman lvm2 ksmtuned driverctl jq \
             nftables tmpwatch sysstat iproute-tc systemd-container \
